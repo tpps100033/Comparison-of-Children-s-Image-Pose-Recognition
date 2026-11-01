@@ -17,11 +17,11 @@ The image cohort is based on COCO 2017 validation photographs and COCO-UniHuman 
 5. Prepare the child handoff with the documented data preparation script. Confirm the resulting manifest contains the intended 134 unique crops and hashes before inference.
 6. Run an actual validation, for example: `python scripts/validate_model.py --model rtmpose_m --dataset coco_unihuman_child_val134`. Use the same command with each of the six model IDs.
 7. Run one model with `python scripts/run_research.py --model rtmpose_m --dataset coco_unihuman_child_val134`. To run all six in sequence, use `bash scripts/run_all_models_for_dataset.sh coco_unihuman_child_val134`. The benchmark defaults to an 85°C stop threshold.
-8. After all six runs complete, regenerate the paper's summary tables with `python scripts/analyse_pose_localization_comparison.py`. Existing aggregate outputs are in `reports/`; raw predictions and logs remain local.
+8. After all six runs complete, regenerate the paper's summary tables with `python scripts/analyse_pose_localization_comparison.py`. Existing aggregate outputs are in `reports/`; raw predictions and logs remain local. The current code was checked against the preserved predictions: all six official AP/AP50/AP75 values and both aggregate CSV outputs reproduced exactly; details are in [`docs/REPRODUCIBILITY_CHECK.md`](docs/REPRODUCIBILITY_CHECK.md).
 
 The frozen `fair_reference` protocol uses batch size 1, 10 warm-up images, FP32, and disables AMP, compilation, quantization, and TensorRT. Accuracy uses `pycocotools.COCOeval(iouType="keypoints")` with the default COCO keypoint OKS settings. AP is for this 134-image subset, not full COCO validation AP. The accompanying analysis defines mean OKS and bbox-normalized PCK; pose coverage is diagnostic only.
 
-The run manifests record runtime device, package versions, latency, GPU memory/temperature when available, and inference completeness. An import check is not a successful model validation; use real image inference. See [troubleshooting](docs/TROUBLESHOOTING.md) for runtime-specific details.
+Run the unit checks with `python -m unittest discover -s tests -v`. The run manifests record runtime device, package versions, latency, GPU memory/temperature when available, and inference completeness. An import check is not a successful model validation; use real image inference. See [troubleshooting](docs/TROUBLESHOOTING.md) for runtime-specific details.
 
 ## Citation
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare pose localization across COCO, child, and synthetic datasets.
+"""Recompute the paper's child-cohort pose metrics for six frozen models.
 
 PCK uses visible ground-truth joints and normalizes Euclidean error by the
 longer side of the ground-truth person box. Missing/no-detection predictions

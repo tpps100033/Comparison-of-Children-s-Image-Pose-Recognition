@@ -99,10 +99,11 @@ def run_dataset(adapter, handoff_root, output_root, profile, protocol):
         except Exception as e: logging.getLogger(__name__).exception('Adapter close failed: %s',e)
     timing=[p.get('timings_ms',{}).get('end_to_end') for p in predictions]; timing=[x for x in timing if x is not None]
     evaluation_error=None; metric_rows=[]
+    project_root=Path(__file__).resolve().parents[1]
+    config={}
     try:
         if thermal_stop:
             raise RuntimeError(f"GPU thermal stop at {thermal_stop['temperature_c']} C (limit {thermal_limit} C); partial runs are not scored.")
-        project_root=Path(__file__).resolve().parents[1]
         config=json.loads((project_root/'config/local.json').read_text(encoding='utf-8'))
         annotation_file=project_root/config['datasets'][manifest['dataset_id']]['annotation']
         summary, valid_by_sample=evaluate_coco_keypoints(annotation_file,rows,predictions)
@@ -129,7 +130,7 @@ def run_dataset(adapter, handoff_root, output_root, profile, protocol):
     provenance=adapter.provenance()
     if provenance.get('gpu_peak'):
         env['gpu_memory']['model_peak']=provenance['gpu_peak']
-    expected=config['datasets'][manifest['dataset_id']]['expected_samples']
+    expected=config.get('datasets',{}).get(manifest['dataset_id'],{}).get('expected_samples')
     metric_complete=load_error is None and evaluation_error is None and thermal_stop is None and len(predictions)==len(rows) and expected is not None and len(rows)==expected and counts['errors']==0
     runtime_device=str(provenance.get('runtime_device','')).lower()
     timing_comparable=metric_complete and runtime_device in ('gpu','cuda','cuda:0','gpu_delegate')
