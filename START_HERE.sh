@@ -11,6 +11,7 @@ if ! command -v nvidia-smi >/dev/null; then
   exit 3
 fi
 
+echo 'NOTICE: The one-click launcher is under development and has not completed an end-to-end VM test. Unexpected issues may occur.'
 export INFANTPOSE_MAX_GPU_TEMP_C="${INFANTPOSE_MAX_GPU_TEMP_C:-85}"
 echo 'Starting the six-model child-pose research workflow.'
 echo "GPU temperature stop limit: ${INFANTPOSE_MAX_GPU_TEMP_C}°C"

@@ -4,7 +4,11 @@ Companion research code for the paper. This repository is limited to the paper's
 
 MediaPipe Heavy and MoveNet Thunder use CPU inference in the evaluated runtime. RTMPose-M, YOLO11x, Sapiens, and OpenPose can use CUDA with their compatible environments. The runtime used is recorded in each run manifest.
 
-## One-command setup and run
+## One-command setup and run — development preview
+
+> **Development preview:** The one-click launcher is still under development and has not completed an end-to-end run in the target VM. Unexpected issues may occur.
+>
+> **開發預覽：** 一鍵啟動版仍在開發中，尚未完成目標 VM 的端到端測試，執行時可能發生非預期狀況。
 
 In Ubuntu 24.04 or Ubuntu on WSL2, paste this once:
 
