@@ -36,6 +36,10 @@ Run the unit checks with `python -m unittest discover -s tests -v`. The run mani
 
 See [`CITATION.cff`](CITATION.cff). Contact the corresponding author, HsinHung Kuo, at **khh@cycu.edu.tw**.
 
+## AI assistance disclosure
+
+AI tools assisted with software development for this repository. The authors reviewed and verified the implementation and remain responsible for the code and repository contents.
+
 ## License and rights boundary
 
 The original project code is distributed under the MIT License; see [`LICENSE`](LICENSE). MIT is a practical choice for reusable research software because it permits use, modification, and redistribution while requiring preservation of the copyright and license notice. The repository's pre-existing GitHub initialization already selected MIT.
