@@ -27,6 +27,8 @@ The run manifests record runtime device, package versions, latency, GPU memory/t
 
 See [`CITATION.cff`](CITATION.cff). Contact the corresponding author, HsinHung Kuo, at **khh@cycu.edu.tw**.
 
-## License status
+## License and rights boundary
 
-**Proposed for the original code: MIT.** This staging package contains `LICENSE.proposed-MIT.txt`, not an operative `LICENSE`, because publication rights and coauthor/institutional ownership should be confirmed before granting reuse rights. MIT is a good default for permissive reuse of research software; Apache-2.0 is an alternative if an explicit patent grant is important. Neither applies to third-party data, photos, annotations, checkpoints, or dependencies. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+The original project code is distributed under the MIT License; see [`LICENSE`](LICENSE). MIT is a practical choice for reusable research software because it permits use, modification, and redistribution while requiring preservation of the copyright and license notice. The repository's pre-existing GitHub initialization already selected MIT.
+
+The code license does not grant rights to COCO or COCO-UniHuman images/annotations, model checkpoints, third-party dependencies, institutional marks, or other separately owned material. Review [`DATA_AND_MODEL_LICENSES.md`](DATA_AND_MODEL_LICENSES.md) and each upstream license before use or redistribution.
