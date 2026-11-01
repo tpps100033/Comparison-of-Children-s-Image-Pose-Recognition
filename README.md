@@ -30,6 +30,10 @@ For setup and data preparation without running inference, use `bash scripts/setu
 
 The frozen `fair_reference` protocol uses batch size 1, 10 warm-up images, FP32, and disables AMP, compilation, quantization, and TensorRT. Accuracy uses `pycocotools.COCOeval(iouType="keypoints")` with the default COCO keypoint OKS settings. AP is for this 134-image subset, not full COCO validation AP. The accompanying analysis defines mean OKS and bbox-normalized PCK; pose coverage is diagnostic only.
 
+## Relationship to the reported experiments
+
+This repository is a distribution-limited companion release prepared because the source photographs, annotations, and model checkpoints are governed by separate terms and cannot be bundled here. It provides automated setup and retrieval for assets available from their original sources; restricted checkpoints must be obtained separately. Some implementation details differ from the original research code used to generate the paper's reported results. The tables and figures in the paper refer to the documented experimental protocol and recorded outputs, while this public release provides the corresponding research workflow without redistributing third-party assets. See [data provenance and source terms](docs/DATA_PROVENANCE.md) and [data and model licenses](DATA_AND_MODEL_LICENSES.md) before use.
+
 Run the unit checks with `python -m unittest discover -s tests -v`. The run manifests record runtime device, package versions, latency, GPU memory/temperature when available, and inference completeness. A completed paper run writes predictions/manifests under `03_model_raw_outputs/`, aggregate CSV/JSON under `05_analysis_results/paper_run/`, and logs under `06_logs/`. Existing checked-in summary results remain unchanged. See [setup notes](docs/TROUBLESHOOTING.md) for runtime details.
 
 ## Citation
