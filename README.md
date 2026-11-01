@@ -4,13 +4,23 @@ Companion research code for the paper. This repository is limited to the paper's
 
 MediaPipe Heavy and MoveNet Thunder use CPU inference in the evaluated runtime. RTMPose-M, YOLO11x, Sapiens, and OpenPose can use CUDA with their compatible environments. The runtime used is recorded in each run manifest.
 
+## One-command setup and run
+
+In Ubuntu 24.04 or Ubuntu on WSL2, paste this once:
+
+```bash
+mkdir -p ~/children-pose-paper && cd ~/children-pose-paper && python3 -c 'import urllib.request; urllib.request.urlretrieve("https://github.com/tpps100033/Comparison-of-Children-s-Image-Pose-Recognition/archive/refs/heads/main.tar.gz", "/tmp/children-pose-paper.tar.gz")' && tar -xzf /tmp/children-pose-paper.tar.gz --strip-components=1 && bash START_HERE.sh
+```
+
+On Windows with Ubuntu on WSL2, download [`START_HERE.cmd`](https://raw.githubusercontent.com/tpps100033/Comparison-of-Children-s-Image-Pose-Recognition/main/START_HERE.cmd) and double-click it. It downloads the current package into Ubuntu's Linux file system and starts the same workflow.
+
+The starter checks Ubuntu and GPU access, finds and verifies the paper's Sapiens checkpoint from `C:\\Users\\<you>\\Downloads\\姿態判定` under WSL2, prepares the isolated environments, downloads the data and public model files, runs all six systems, and writes the output tables and logs. First setup asks for the Ubuntu `sudo` password to install system packages. GPU runs stop at 85°C by default.
+
 ## Download and run in Ubuntu / WSL2
 
 The setup downloads the paper's COCO-UniHuman annotations and selected COCO photographs, prepares the 134 crops, installs isolated model environments, and retrieves publicly downloadable model assets. The annotation source is for non-commercial research use; read [data provenance and source terms](docs/DATA_PROVENANCE.md) before running. No images or model weights are included in this GitHub repository.
 
-1. Download this repository as a ZIP from GitHub or clone it inside Ubuntu 24.04 / WSL2. The environment must expose the RTX GPU through `nvidia-smi`.
-2. Run `bash scripts/run_paper.sh`. It installs Ubuntu build prerequisites, creates per-model Python environments, downloads the COCO-UniHuman annotation and selected COCO photos, prepares the fixed child cohort, downloads public model assets, builds OpenPose, runs all six systems in sequence, and writes aggregate CSV/JSON output. GPU runs stop at 85°C by default.
-3. The exact 17-keypoint Sapiens TorchScript checkpoint used in the paper is a separate 4.67 GB asset that is not publicly downloadable. Provide an authorized copy at `02_datasets/model_cache/sapiens_1b/sapiens_1b_coco_best_coco_AP_821_torchscript.pt2` (or set `INFANTPOSE_SAPIENS_CHECKPOINT`), then rerun the command. The runner will not substitute a different checkpoint.
+For manual setup, run `bash scripts/run_paper.sh`. The exact 17-keypoint Sapiens TorchScript checkpoint is a separate 4.67 GB asset. The starter automatically finds and verifies the supplied checkpoint in the Windows Downloads folder under WSL2; on a separate Ubuntu VM, place it at `02_datasets/model_cache/sapiens_1b/sapiens_1b_coco_best_coco_AP_821_torchscript.pt2` or set `INFANTPOSE_SAPIENS_CHECKPOINT`.
 
 For setup and data preparation without running inference, use `bash scripts/setup_vm.sh`. Once the Sapiens checkpoint is available, `bash scripts/run_paper.sh` runs inference and analysis.
 
