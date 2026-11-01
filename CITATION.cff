@@ -2,6 +2,16 @@ cff-version: 1.2.0
 message: "If you use this code or results, cite the accompanying paper and contact the corresponding author."
 title: "Comparison of Deep Learning Models for Human Pose Estimation in Children"
 type: software
+abstract: "Reproducible six-model evaluation of child human pose estimation on a COCO-UniHuman COCO-17 cohort using official COCO keypoint metrics."
+repository-code: "https://github.com/tpps100033/Comparison-of-Children-s-Image-Pose-Recognition"
+license: MIT
+keywords:
+  - human pose estimation
+  - child pose estimation
+  - keypoint detection
+  - COCO-17
+  - COCOeval
+  - reproducible research
 authors:
   - family-names: Lee
     given-names: An
