@@ -112,15 +112,16 @@ def main() -> None:
     if digest != ANNOTATION_SHA256:
         raise RuntimeError(f"COCO-UniHuman validation annotation SHA-256 mismatch: {digest}")
     source = json.loads(source_path.read_text(encoding="utf-8"))
-    coco_path = ROOT / "02_datasets/person_keypoints_val2017_singleperson.json"
-    coco = json.loads(coco_path.read_text(encoding="utf-8"))
-    excluded_ids = {int(image["id"]) for image in coco["images"]}
-    coco_raw = ROOT / "02_datasets/canonical/coco_singleperson_val2017/raw"
-    supported_images = {".jpg", ".jpeg", ".png", ".bmp"}
-    coco_image_files = [path for path in coco_raw.rglob("*") if path.is_file() and path.suffix.lower() in supported_images]
-    if len(coco_image_files) != len(excluded_ids):
-        raise RuntimeError(f"Expected {len(excluded_ids)} local COCO comparison images for byte-level deduplication, found {len(coco_image_files)}")
-    excluded_content_hashes = {sha256(path) for path in coco_image_files}
+    reference_path = ROOT / "config/coco_exclusion_manifest.json"
+    reference = json.loads(reference_path.read_text(encoding="utf-8"))
+    records = reference.get("records", [])
+    if reference.get("schema") != "coco-singleperson-val2017-exclusion-v1" or len(records) != 921:
+        raise RuntimeError("The frozen 921-image COCO exclusion manifest is missing or invalid")
+    excluded_ids = {int(record["image_id"]) for record in records}
+    excluded_content_hashes = {str(record["sha256"]) for record in records}
+    if len(excluded_ids) != 921 or len(excluded_content_hashes) != 921:
+        raise RuntimeError("The COCO exclusion manifest must contain 921 unique image IDs and SHA-256 values")
+    reference_digest = sha256(reference_path)
     selected = select_children(source, excluded_ids)
 
     dataset_root = ROOT / "02_datasets/canonical" / DATASET
@@ -209,6 +210,7 @@ def main() -> None:
         json.dumps({"dataset_id": DATASET, "source_annotation": ANNOTATION_SOURCE,
                     "source_annotation_sha256": digest, "source_image_count": EXPECTED_IMAGES,
                     "selected_person_count": len(annotations_out), "excluded_coco_project_image_count": len(excluded_ids),
+                    "excluded_coco_reference_manifest_sha256": reference_digest,
                     "apparent_age_range_years": [MIN_APPARENT_AGE, MAX_APPARENT_AGE],
                     "images": source_rows}, indent=2), encoding="utf-8")
     sys.path.insert(0, str(ROOT))

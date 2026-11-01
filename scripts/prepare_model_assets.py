@@ -9,6 +9,12 @@ def digest(path):
         for block in iter(lambda:f.read(8*1024*1024),b''): h.update(block)
     return h.hexdigest()
 
+def md5(path):
+    h=hashlib.md5()
+    with path.open('rb') as f:
+        for block in iter(lambda:f.read(8*1024*1024),b''): h.update(block)
+    return h.hexdigest()
+
 def download(url,path,validate=None):
     path.parent.mkdir(parents=True,exist_ok=True)
     if path.is_file() and path.stat().st_size and (validate is None or validate(path)):
@@ -41,6 +47,9 @@ def main():
     assets['mediapipe_pose_heavy']=download('https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_heavy/float16/latest/pose_landmarker_heavy.task',CACHE/'mediapipe_pose_heavy'/'pose_landmarker_heavy.task')
     assets['movenet_thunder']=download('https://tfhub.dev/google/lite-model/movenet/singlepose/thunder/4?lite-format=tflite',CACHE/'movenet_thunder'/'movenet_thunder.tflite')
     assets['yolo11x_pose']=download('https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11x-pose.pt',CACHE/'yolo11x_pose'/'yolo11x-pose.pt')
+    openpose_url='http://posefs1.perception.cs.cmu.edu/OpenPose/models/pose/coco/pose_iter_440000.caffemodel'
+    openpose_path=CACHE/'openpose_coco18'/'pose_iter_440000.caffemodel'
+    assets['openpose_coco18']=download(openpose_url,openpose_path,lambda p: md5(p)=='5156d31f670511fce9b4e28b403f2939')
     d=CACHE/'rtmpose_m'; d.mkdir(parents=True,exist_ok=True)
     pose_url='https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.zip'
     det_url='https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/yolox_m_8xb8-300e_humanart-c2c7a14a.zip'
@@ -55,6 +64,11 @@ def main():
     else:
         assets['rtmpose_detector_zip']=download(det_url,d/'yolox_m_detector_sdk.zip',zip_has_onnx)
         assets['rtmpose_detector_onnx']=extract_onnx(d/'yolox_m_detector_sdk.zip',det_onnx)
+    sapiens=Path(__import__('os').environ.get('INFANTPOSE_SAPIENS_CHECKPOINT',str(CACHE/'sapiens_1b'/'sapiens_1b_coco_best_coco_AP_821_torchscript.pt2')))
+    if sapiens.is_file() and sapiens.stat().st_size>1024*1024:
+        assets['sapiens_1b_coco']={'state':'reused','path':str(sapiens),'bytes':sapiens.stat().st_size,'sha256':digest(sapiens)}
+    else:
+        assets['sapiens_1b_coco']={'state':'manual_checkpoint_required','path':str(sapiens),'reason':'The exact 17-keypoint TorchScript checkpoint used in this paper is not publicly downloadable; provide an authorized copy.'}
     out=CACHE/'cache_status.json'; out.write_text(json.dumps({'schema':'local-model-cache-v1','assets':assets},ensure_ascii=False,indent=2),encoding='utf-8')
     print(out.read_text(encoding='utf-8'))
 

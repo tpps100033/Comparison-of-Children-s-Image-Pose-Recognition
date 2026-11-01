@@ -4,24 +4,19 @@ Companion research code for the paper. This repository is limited to the paper's
 
 MediaPipe Heavy and MoveNet Thunder use CPU inference in the evaluated runtime. RTMPose-M, YOLO11x, Sapiens, and OpenPose can use CUDA with their compatible environments. The runtime used is recorded in each run manifest.
 
-## Reproduction inputs
+## Download and run in Ubuntu / WSL2
 
-The image cohort is based on COCO 2017 validation photographs and COCO-UniHuman v2 apparent-age/keypoint annotations. It is not bundled. Obtain those sources under their respective terms, then configure local paths using `config/local.example.json`. Model checkpoints are also fetched or placed in the local ignored cache; they are not redistributed here. Read [data provenance and source terms](docs/DATA_PROVENANCE.md) before running.
+The setup downloads the paper's COCO-UniHuman annotations and selected COCO photographs, prepares the 134 crops, installs isolated model environments, and retrieves publicly downloadable model assets. The annotation source is for non-commercial research use; read [data provenance and source terms](docs/DATA_PROVENANCE.md) before running. No images or model weights are included in this GitHub repository.
 
-## Reproduction steps
+1. Download this repository as a ZIP from GitHub or clone it inside Ubuntu 24.04 / WSL2. The environment must expose the RTX GPU through `nvidia-smi`.
+2. Run `bash scripts/run_paper.sh`. It installs Ubuntu build prerequisites, creates per-model Python environments, downloads the COCO-UniHuman annotation and selected COCO photos, prepares the fixed child cohort, downloads public model assets, builds OpenPose, runs all six systems in sequence, and writes aggregate CSV/JSON output. GPU runs stop at 85°C by default.
+3. The exact 17-keypoint Sapiens TorchScript checkpoint used in the paper is a separate 4.67 GB asset that is not publicly downloadable. Provide an authorized copy at `02_datasets/model_cache/sapiens_1b/sapiens_1b_coco_best_coco_AP_821_torchscript.pt2` (or set `INFANTPOSE_SAPIENS_CHECKPOINT`), then rerun the command. The runner will not substitute a different checkpoint.
 
-1. Use Ubuntu 24.04 (including WSL2) with Python 3.12 and a compatible host NVIDIA driver if CUDA inference is desired. MediaPipe and MoveNet's evaluated adapters are CPU-based.
-2. Install OpenPose build prerequisites as listed in [`requirements/openpose.md`](requirements/openpose.md) if reproducing OpenPose.
-3. Run `bash scripts/setup_wsl.sh` from the repository root. It builds isolated environments for each model under the local user cache. Use the matching lock files in `requirements/locks/`.
-4. Copy `config/local.example.json` to `config/local.json` and set the local data/annotation paths. Keep the local file private if it contains personal paths.
-5. Prepare the child handoff with the documented data preparation script. Confirm the resulting manifest contains the intended 134 unique crops and hashes before inference.
-6. Run an actual validation, for example: `python scripts/validate_model.py --model rtmpose_m --dataset coco_unihuman_child_val134`. Use the same command with each of the six model IDs.
-7. Run one model with `python scripts/run_research.py --model rtmpose_m --dataset coco_unihuman_child_val134`. To run all six in sequence, use `bash scripts/run_all_models_for_dataset.sh coco_unihuman_child_val134`. The benchmark defaults to an 85°C stop threshold.
-8. After all six runs complete, regenerate the paper's summary tables with `python scripts/analyse_pose_localization_comparison.py`. Existing aggregate outputs are in `reports/`; raw predictions and logs remain local. The current code was checked against the preserved predictions: all six official AP/AP50/AP75 values and both aggregate CSV outputs reproduced exactly; details are in [`docs/REPRODUCIBILITY_CHECK.md`](docs/REPRODUCIBILITY_CHECK.md).
+For setup and data preparation without running inference, use `bash scripts/setup_vm.sh`. Once the Sapiens checkpoint is available, `bash scripts/run_paper.sh` runs inference and analysis.
 
 The frozen `fair_reference` protocol uses batch size 1, 10 warm-up images, FP32, and disables AMP, compilation, quantization, and TensorRT. Accuracy uses `pycocotools.COCOeval(iouType="keypoints")` with the default COCO keypoint OKS settings. AP is for this 134-image subset, not full COCO validation AP. The accompanying analysis defines mean OKS and bbox-normalized PCK; pose coverage is diagnostic only.
 
-Run the unit checks with `python -m unittest discover -s tests -v`. The run manifests record runtime device, package versions, latency, GPU memory/temperature when available, and inference completeness. An import check is not a successful model validation; use real image inference. See [troubleshooting](docs/TROUBLESHOOTING.md) for runtime-specific details.
+Run the unit checks with `python -m unittest discover -s tests -v`. The run manifests record runtime device, package versions, latency, GPU memory/temperature when available, and inference completeness. A completed paper run writes predictions/manifests under `03_model_raw_outputs/`, aggregate CSV/JSON under `05_analysis_results/paper_run/`, and logs under `06_logs/`. Existing checked-in summary results remain unchanged. See [setup notes](docs/TROUBLESHOOTING.md) for runtime details.
 
 ## Citation
 
