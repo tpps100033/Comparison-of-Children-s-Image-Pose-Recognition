@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this code or results, cite the accompanying paper and contact the corresponding author."
+title: "Comparison of Deep Learning Models for Human Pose Estimation in Children"
+type: software
+authors:
+  - family-names: Lee
+    given-names: An
+  - family-names: Chen
+    given-names: Huan-Hsu
+  - family-names: Lin
+    given-names: Ming-Hao
+  - family-names: Kuo
+    given-names: HsinHung
+    email: khh@cycu.edu.tw

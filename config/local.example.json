@@ -1,0 +1,18 @@
+{
+  "data_root": "02_datasets",
+  "model_cache": "02_datasets/model_cache",
+  "canonical": "02_datasets/canonical",
+  "raw_outputs": "03_model_raw_outputs",
+  "merged_results": "04_merged_results",
+  "analysis_results": "05_analysis_results",
+  "logs": "06_logs",
+  "datasets": {
+    "coco_unihuman_child_val134": {
+      "raw": "02_datasets/canonical/coco_unihuman_child_val134/raw",
+      "annotation": "02_datasets/person_keypoints_coco_unihuman_child_val134.json",
+      "expected_samples": 134,
+      "mapping": "cocounihuman_apparent_age_3_17_crop_coco17_v1"
+    }
+  },
+  "profile": "fair_reference"
+}

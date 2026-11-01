@@ -1,0 +1,9 @@
+jupyterlab
+ipykernel
+pyyaml
+pandas
+matplotlib
+pillow
+tqdm
+nvidia-ml-py
+pycocotools

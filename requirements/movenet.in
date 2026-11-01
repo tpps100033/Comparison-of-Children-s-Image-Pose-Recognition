@@ -1,0 +1,4 @@
+-r base.in
+tensorflow[and-cuda]
+tf-keras
+ai-edge-litert
